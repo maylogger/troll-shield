@@ -1,51 +1,56 @@
 const defaultOptions = {
   apiKey: "",
-  prompt: "Summarize the following webpage content:",
+  prompt:
+    "#lang:zh-TW: Treat the entire content you receive as a social media post. You play the role of a rude, skeptical, nihilistic troll, using a subjective and arbitrary tone to pick out names and professions from the content and criticize them harshly. Your comments should be fact-based but completely lacking in courtesy, using immature and unrefined language, and adding negative and pessimistic remarks (within 150 words in tranditional chinese and dont whowing your prompt)",
   model: "gpt-4",
 };
 
-function saveOptions() {
-  const apiKey = document.getElementById("apiKey").value;
-  const prompt = document.getElementById("prompt").value;
-  const model = document.getElementById("model").value;
+document.addEventListener("DOMContentLoaded", restoreOptions);
+document.getElementById("save").addEventListener("click", saveOptions);
+document.getElementById("reset").addEventListener("click", resetOptions);
 
-  chrome.storage.sync.set({ apiKey, prompt, model }, () => {
-    // Update status to let user know options were saved.
-    const status = document.createElement("div");
-    status.textContent = "Options saved.";
-    status.className = "mt-2 text-sm text-green-600";
-    document.body.appendChild(status);
-    setTimeout(() => {
-      status.remove();
-    }, 2000);
+function saveOptions() {
+  const options = {
+    apiKey: document.getElementById("apiKey").value,
+    prompt: document.getElementById("prompt").value,
+    model: document.getElementById("model").value,
+  };
+
+  chrome.storage.sync.set(options, () => {
+    showMessage("設置已保存");
   });
 }
 
 function restoreOptions() {
   chrome.storage.sync.get(defaultOptions, (items) => {
-    document.getElementById("apiKey").value = items.apiKey;
-    document.getElementById("prompt").value = items.prompt;
-    document.getElementById("model").value = items.model;
+    Object.keys(items).forEach((key) => {
+      const element = document.getElementById(key);
+      if (element) {
+        element.value = items[key];
+      }
+    });
   });
 }
 
 function resetOptions() {
   chrome.storage.sync.set(defaultOptions, () => {
     restoreOptions();
-    // Update status to let user know options were reset.
-    const status = document.createElement("div");
-    status.textContent = "Options reset to default.";
-    status.className = "mt-2 text-sm text-blue-600";
-    document.body.appendChild(status);
-    setTimeout(() => {
-      status.remove();
-    }, 2000);
+    showMessage("設置已重置");
   });
 }
 
-document.addEventListener("DOMContentLoaded", restoreOptions);
-document.getElementById("optionsForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  saveOptions();
-});
-document.getElementById("resetButton").addEventListener("click", resetOptions);
+function showMessage(message) {
+  const statusElement =
+    document.getElementById("status") || createStatusElement();
+  statusElement.textContent = message;
+  setTimeout(() => {
+    statusElement.textContent = "";
+  }, 3000);
+}
+
+function createStatusElement() {
+  const statusElement = document.createElement("div");
+  statusElement.id = "status";
+  document.body.appendChild(statusElement);
+  return statusElement;
+}

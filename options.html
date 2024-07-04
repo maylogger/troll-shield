@@ -1,69 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Website Summarizer Options</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="utf-8" />
+    <title>設置</title>
   </head>
-  <body class="bg-gray-100 p-8">
-    <div
-      class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6"
-    >
-      <h1 class="text-2xl font-bold mb-4">Website Summarizer Options</h1>
-      <form id="optionsForm">
-        <div class="mb-4">
-          <label for="apiKey" class="block text-sm font-medium text-gray-700"
-            >OpenAI API Key:</label
-          >
-          <input
-            type="password"
-            id="apiKey"
-            name="apiKey"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-        </div>
-        <div class="mb-4">
-          <label for="prompt" class="block text-sm font-medium text-gray-700"
-            >Custom Prompt:</label
-          >
-          <textarea
-            id="prompt"
-            name="prompt"
-            rows="3"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          ></textarea>
-        </div>
-        <div class="mb-4">
-          <label for="model" class="block text-sm font-medium text-gray-700"
-            >Model:</label
-          >
-          <select
-            id="model"
-            name="model"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          >
-            <option value="gpt-4">GPT-4</option>
-            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-          </select>
-        </div>
-        <div class="flex justify-between">
-          <button
-            type="submit"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            id="resetButton"
-            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Reset to Default
-          </button>
-        </div>
-      </form>
-    </div>
+  <body>
+    <label for="apiKey">OpenAI API Key:</label>
+    <input type="text" id="apiKey" /><br /><br />
+
+    <label for="prompt">自訂 Prompt:</label>
+    <textarea id="prompt"></textarea><br /><br />
+
+    <label for="model">選擇模型:</label>
+    <select id="model">
+      <option value="gpt-4o">GPT-4o</option>
+      <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option></select
+    ><br /><br />
+
+    <button id="save">儲存</button>
+    <button id="reset">重置</button>
+
     <script src="options.js"></script>
   </body>
 </html>

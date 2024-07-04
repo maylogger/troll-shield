@@ -1,70 +1,69 @@
-// Inject Readability.js
-const script = document.createElement("script");
-script.src = chrome.runtime.getURL("readability.js");
-document.head.appendChild(script);
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "summarize") {
-    summarizeWebpage();
+    createFloatingDiv();
+    summarizeContent();
   }
 });
 
-async function summarizeWebpage() {
-  // Get webpage content using Readability
-  const documentClone = document.cloneNode(true);
-  const article = new Readability(documentClone).parse();
-  const content = article.textContent;
-
-  // Get saved options
-  const options = await chrome.storage.sync.get(["apiKey", "prompt", "model"]);
-
-  // Prepare the API request
-  const apiKey = options.apiKey;
-  const model = options.model || "gpt-4";
-  const prompt = options.prompt || "Summarize the following webpage content:";
-  const messages = [
-    { role: "system", content: prompt },
-    { role: "user", content: content },
-  ];
-
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: messages,
-      }),
-    });
-
-    const data = await response.json();
-    const summary = data.choices[0].message.content;
-
-    displaySummary(summary);
-  } catch (error) {
-    console.error("Error:", error);
-    displaySummary("An error occurred while summarizing the webpage.");
-  }
-}
-
-function displaySummary(summary) {
+function createFloatingDiv() {
   const div = document.createElement("div");
-  div.className =
-    "fixed top-4 right-4 w-1/3 bg-white p-4 rounded shadow-lg z-50";
-  div.innerHTML = `
-        <div class="flex justify-between items-center mb-2">
-            <h2 class="text-lg font-bold">Summary</h2>
-            <button id="closeSummary" class="text-gray-500 hover:text-gray-700">Close</button>
-        </div>
-        <p>${summary}</p>
-    `;
-
+  div.id = "summarizer-extension";
+  div.style.cssText = `
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid black;
+    padding: 10px;
+    z-index: 10000;
+  `;
+  div.innerHTML = '<p>Loading...</p><button id="close-summarizer">X</button>';
   document.body.appendChild(div);
 
-  document.getElementById("closeSummary").addEventListener("click", () => {
-    div.remove();
+  document
+    .getElementById("close-summarizer")
+    .addEventListener("click", function () {
+      document.body.removeChild(div);
+    });
+}
+
+async function summarizeContent() {
+  const article = new Readability(document.cloneNode(true)).parse();
+  const content = article.textContent;
+
+  const options = await chrome.storage.sync.get(["apiKey", "prompt", "model"]);
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${options.apiKey}`,
+    },
+    body: JSON.stringify({
+      model: options.model,
+      messages: [
+        { role: "system", content: options.prompt },
+        { role: "user", content: content },
+      ],
+    }),
   });
+
+  const result = await response.json();
+  const summary = result.choices[0].message.content;
+
+  document.getElementById("summarizer-extension").innerHTML = `
+    <p>${summary}</p>
+    <button id="close-summarizer">X</button>
+  `;
+
+  document
+    .getElementById("close-summarizer")
+    .addEventListener("click", function () {
+      document.body.removeChild(
+        document.getElementById("summarizer-extension")
+      );
+    });
 }
