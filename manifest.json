@@ -3,11 +3,7 @@
   "name": "Troll Shield 酸民護盾",
   "version": "1.0",
   "description": "自動產生酸民留言，讓您的心態能快速適應惡意的網路環境",
-  "permissions": ["storage", "activeTab", "scripting"],
-  "options_page": "options.html",
-  "background": {
-    "service_worker": "service-worker.js"
-  },
+  "permissions": ["activeTab", "storage"],
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",
@@ -15,16 +11,24 @@
       "128": "icons/icon128.png"
     }
   },
-  "web_accessible_resources": [
-    {
-      "resources": ["Readability.js"],
-      "matches": ["<all_urls>"]
-    }
-  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js", "Readability.js"]
+      "js": ["content.js"],
+      "css": ["content.css"]
     }
-  ]
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["readability.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' https://cdn.tailwindcss.com; object-src 'self'"
+  }
 }

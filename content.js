@@ -1,74 +1,70 @@
-(async () => {
-  try {
-    // 動態加載 readability.js
-    const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('Readability.js');
-    script.onload = async () => {
-      // 確保 Readability 已經定義
-      if (typeof Readability === 'undefined') {
-        console.error('Readability is not defined after loading script.');
-        return;
-      }
+// Inject Readability.js
+const script = document.createElement("script");
+script.src = chrome.runtime.getURL("readability.js");
+document.head.appendChild(script);
 
-      // 解析網頁內容
-      const documentClone = document.cloneNode(true);
-      const article = new Readability(documentClone).parse();
-
-      if (!article) {
-        console.error('Failed to parse the article.');
-        return;
-      }
-
-      // 從 Chrome storage 獲取設定
-      chrome.storage.sync.get(['apiKey', 'customPrompt', 'model'], async (result) => {
-        if (!result.apiKey || !result.customPrompt || !result.model) {
-          console.error('Please configure the extension first.');
-          return;
-        }
-
-        const apiKey = result.apiKey;
-        const prompt = `${result.customPrompt}\n\n${article.content}`;
-        const model = result.model;
-
-        // 發送請求到 OpenAI API
-        const apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [{ role: 'user', content: prompt }]
-          })
-        });
-
-        const data = await apiResponse.json();
-        console.log(data);
-
-        // 顯示回應結果
-        const fixedDiv = document.createElement('div');
-        fixedDiv.style.position = 'fixed';
-        fixedDiv.style.top = '10px';
-        fixedDiv.style.right = '10px';
-        fixedDiv.style.backgroundColor = 'white';
-        fixedDiv.style.padding = '10px';
-        fixedDiv.style.border = '1px solid black';
-        fixedDiv.style.zIndex = 1000;
-        fixedDiv.innerHTML = `
-          <div>${data.choices[0].message.content}</div>
-          <div style="text-align: right; cursor: pointer; color: red;" id="closeDiv">Close</div>
-        `;
-
-        document.body.appendChild(fixedDiv);
-
-        document.getElementById('closeDiv').addEventListener('click', () => {
-          fixedDiv.remove();
-        });
-      });
-    };
-    document.head.appendChild(script);
-  } catch (error) {
-    console.error('Error loading readability.js:', error);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "summarize") {
+    summarizeWebpage();
   }
-})();
+});
+
+async function summarizeWebpage() {
+  // Get webpage content using Readability
+  const documentClone = document.cloneNode(true);
+  const article = new Readability(documentClone).parse();
+  const content = article.textContent;
+
+  // Get saved options
+  const options = await chrome.storage.sync.get(["apiKey", "prompt", "model"]);
+
+  // Prepare the API request
+  const apiKey = options.apiKey;
+  const model = options.model || "gpt-4";
+  const prompt = options.prompt || "Summarize the following webpage content:";
+  const messages = [
+    { role: "system", content: prompt },
+    { role: "user", content: content },
+  ];
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: messages,
+      }),
+    });
+
+    const data = await response.json();
+    const summary = data.choices[0].message.content;
+
+    displaySummary(summary);
+  } catch (error) {
+    console.error("Error:", error);
+    displaySummary("An error occurred while summarizing the webpage.");
+  }
+}
+
+function displaySummary(summary) {
+  const div = document.createElement("div");
+  div.className =
+    "fixed top-4 right-4 w-1/3 bg-white p-4 rounded shadow-lg z-50";
+  div.innerHTML = `
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-lg font-bold">Summary</h2>
+            <button id="closeSummary" class="text-gray-500 hover:text-gray-700">Close</button>
+        </div>
+        <p>${summary}</p>
+    `;
+
+  document.body.appendChild(div);
+
+  document.getElementById("closeSummary").addEventListener("click", () => {
+    div.remove();
+  });
+}

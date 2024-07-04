@@ -1,39 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>酸民盾牌擴充功能設定</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Website Summarizer Options</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-
-  <body class="bg-slate-800 text-slate-200">
-    <div class="mx-auto max-w-md space-y-4 py-10">
-      <h1 class="text-lg font-semibold">酸民盾牌擴充功能設定</h1>
-      <div class="flex flex-col gap-2">
-        <label for="apiKey">OpenAI API Key</label>
-        <ul class="list-inside list-decimal text-sm text-slate-500">
-          <li>登入 OpenAI 前往 <a href="https://platform.openai.com/account/api-keys" class="text-blue-500" target="_blank">API key 頁面</a></li>
-          <li>按下 Create new secret key 按鈕</li>
-          <li>把產生的 key 填在下面：</li>
-        </ul>
-        <input class="bg-slate rounded p-2 text-black" type="text" id="apiKey" placeholder="sk-****" />
-      </div>
-      <div class="flex flex-col gap-1">
-        <label for="customPrompt">Custom Prompt:</label>
-        <textarea rows="7" class="bg-slate rounded p-2 text-black" id="customPrompt" placeholder="Enter your custom prompt"></textarea>
-      </div>
-      <div class="flex flex-col gap-1">
-        <label for="model">Model:</label>
-        <select class="bg-slate rounded p-2 text-black" type="text" id="model">
-          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-          <option selected value="gpt-4o">gpt-4o</option>
-        </select>
-      </div>
-      <div class="flex gap-4 !mt-8">
-        <button class="flex-grow rounded bg-blue-500 px-4 py-2 text-white hover:opacity-80" id="save">Save</button>
-        <button class="flex-grow rounded border border-slate-500 px-4 py-2 text-white hover:opacity-80" id="reset">Reset</button>
-      </div>
+  <body class="bg-gray-100 p-8">
+    <div
+      class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6"
+    >
+      <h1 class="text-2xl font-bold mb-4">Website Summarizer Options</h1>
+      <form id="optionsForm">
+        <div class="mb-4">
+          <label for="apiKey" class="block text-sm font-medium text-gray-700"
+            >OpenAI API Key:</label
+          >
+          <input
+            type="password"
+            id="apiKey"
+            name="apiKey"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="prompt" class="block text-sm font-medium text-gray-700"
+            >Custom Prompt:</label
+          >
+          <textarea
+            id="prompt"
+            name="prompt"
+            rows="3"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          ></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="model" class="block text-sm font-medium text-gray-700"
+            >Model:</label
+          >
+          <select
+            id="model"
+            name="model"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          >
+            <option value="gpt-4">GPT-4</option>
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+          </select>
+        </div>
+        <div class="flex justify-between">
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            id="resetButton"
+            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Reset to Default
+          </button>
+        </div>
+      </form>
     </div>
     <script src="options.js"></script>
   </body>
