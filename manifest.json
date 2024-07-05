@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Web Content Summarizer",
+  "name": "AI 酸民護盾",
   "version": "1.0",
-  "description": "Summarize web content using OpenAI API",
+  "description": "「AI 酸民護盾」瀏覽器外掛：模擬網路酸民批評你的網頁內容。發文後先按一下，看看酸民可能會怎麼批評，之後真的有人來批評，你就完全沒有感覺了",
   "permissions": ["activeTab", "storage"],
   "action": {
     "default_icon": {
@@ -18,7 +18,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js", "Readability.js"]
+      "js": ["Readability.js", "content.js"],
+      "css": ["content.css"]
     }
   ]
 }
