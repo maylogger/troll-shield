@@ -1,0 +1,31 @@
+.summarizer-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10000;
+}
+
+.summarizer-div {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.summarizer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.close-summarizer {
+  cursor: pointer;
+}
