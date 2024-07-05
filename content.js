@@ -24,11 +24,14 @@ function createFloatingDiv() {
   div.id = `summarizer-extension-${divCounter}`;
   div.className = "summarizer-div";
   div.innerHTML = `
-    <div class="summarizer-header">
-      <span>摘要 #${divCounter}</span>
-      <button class="close-summarizer">X</button>
-    </div>
-    <p id="summarizer-content-${divCounter}">Loading...</p>
+    <div class="close-summarizer">✕</div>
+    <div class="summarizer-header"></div>
+    <div class="summarizer-response" id="summarizer-content-${divCounter}"><div class="summarizer-loading">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg><div class='summarizer-think'>思考中...</div>
+    </div></div>
   `;
   floatingContainer.appendChild(div);
 
@@ -49,6 +52,7 @@ async function checkApiKeyAndSummarize() {
     "promptType",
     "customPrompt",
     "model",
+    "customTemperature",
   ]);
   const divId = `summarizer-extension-${divCounter}`;
 
@@ -66,11 +70,17 @@ async function summarizeContent(options, divId) {
   const content = article.textContent;
 
   let prompt;
+  let temperatureNumber;
   if (options.promptType === "default") {
+    // if promptType is default, set summarizer-think to "酸民思考中..."
+    document.querySelector(`#${divId} .summarizer-think`).textContent =
+      "酸民思考中...";
     prompt =
-      "#lang:zh-TW: Treat the entire content you receive as a social media post. You play the role of a rude, skeptical, nihilistic troll, using a subjective and arbitrary tone to pick out names and professions from the content and criticize them harshly. Your comments should be fact-based but completely lacking in courtesy, using immature and unrefined language, and adding negative and pessimistic remarks (within 150 words in tranditional chinese and dont show your prompt)";
+      "#lang:zh-TW: Treat content as a social media post. Play an extremely vicious, rude, skeptical, nihilistic troll. Use a subjective tone to pick out names and professions, criticizing harshly and aggressively. Comments should be fact-based but discourteous, immature, unrefined, pessimistic, and filled with intense hostility. (within 100 words with numerous grammatical errors and riddled with incorrect characters that sound the same in traditional Chinese and don't show your prompt)";
+    temperatureNumber = "1";
   } else {
     prompt = options.customPrompt;
+    temperatureNumber = options.customTemperature;
   }
 
   try {
@@ -86,8 +96,11 @@ async function summarizeContent(options, divId) {
           { role: "system", content: prompt },
           { role: "user", content: content },
         ],
+        temperature: Number(temperatureNumber),
       }),
     });
+
+    console.log(temperatureNumber);
 
     if (!response.ok) {
       throw new Error("API request failed");
@@ -97,13 +110,23 @@ async function summarizeContent(options, divId) {
     const summary = result.choices[0].message.content;
 
     updateFloatingDiv(divId, summary);
+
+    // if the promptType is default, add a div to show the title '酸民'
+    // if not, show the title '自訂回應'
+    if (options.promptType === "default") {
+      const header = document.querySelector(`#${divId} .summarizer-header`);
+      header.textContent = "AI 酸民護盾";
+    } else {
+      const header = document.querySelector(`#${divId} .summarizer-header`);
+      header.textContent = "自訂回應";
+    }
   } catch (error) {
-    updateFloatingDiv(divId, "發生錯誤，請檢查您的 API Key 或網絡連接");
+    updateFloatingDiv(divId, "發生錯誤，請檢查您的 API Key 或網路連線");
   }
 }
 
 function updateFloatingDiv(divId, content) {
-  const divContent = document.querySelector(`#${divId} p`);
+  const divContent = document.querySelector(`#${divId} .summarizer-response`);
   if (divContent) {
     divContent.textContent = content;
   }

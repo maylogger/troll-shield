@@ -1,31 +1,116 @@
 .summarizer-container {
   position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 320px;
-  max-height: 90vh;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  padding-bottom: 20px;
+  width: 400px;
+  max-height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 10px;
   z-index: 10000;
+  pointer-events: none;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
 }
 
 .summarizer-div {
-  background-color: white;
-  color: black;
-  border: 1px solid black;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  background-color: rgb(15 23 42 / 70%);
+  color: white;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  padding: 18px 24px;
+  backdrop-filter: blur(30px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-clip: padding-box;
+  line-height: 1.5;
+  font-size: 16px;
+  transform: translateX(450px);
+  animation: push 0.4s ease forwards;
+}
+
+.summarizer-response {
+  white-space: pre-wrap;
 }
 
 .summarizer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.5;
+  letter-spacing: 1px;
 }
 
 .close-summarizer {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 8px;
+  right: 8px;
   cursor: pointer;
+  font-size: 12px;
+  background: none;
+  border: none;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s;
+  padding: 0;
+  margin: 0;
+}
+.close-summarizer:hover {
+  background: none;
+  color: white;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.summarizer-div:hover .close-summarizer {
+  opacity: 1;
+}
+
+.summarizer-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summarizer-loading svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes push {
+  from {
+    transform: tranaslateX(450px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.opacity-25 {
+  opacity: 0.25;
+}
+
+.opacity-75 {
+  opacity: 0.75;
 }

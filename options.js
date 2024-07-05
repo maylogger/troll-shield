@@ -2,7 +2,8 @@ const defaultOptions = {
   apiKey: "",
   promptType: "default",
   customPrompt: "",
-  model: "gpt-3.5-turbo-0125",
+  model: "gpt-3.5-turbo",
+  customTemperature: "0.3",
 };
 
 const defaultPrompt =
@@ -25,6 +26,7 @@ function saveOptions() {
       .value,
     customPrompt: document.getElementById("prompt").value,
     model: document.getElementById("model").value,
+    customTemperature: document.getElementById("customTemperature").value,
   };
 
   chrome.storage.sync.set(options, () => {
@@ -40,6 +42,8 @@ function restoreOptions() {
     ).checked = true;
     document.getElementById("prompt").value = items.customPrompt;
     document.getElementById("model").value = items.model;
+    document.getElementById("customTemperature").value =
+      items.customTemperature;
     togglePromptTextarea();
   });
 }
@@ -52,7 +56,7 @@ function resetOptions() {
 }
 
 function togglePromptTextarea() {
-  const promptTextarea = document.getElementById("prompt");
+  const promptTextarea = document.getElementById("customArea");
   const isCustom = document.getElementById("customPrompt").checked;
   if (isCustom) {
     promptTextarea.classList.remove("hidden");
@@ -68,16 +72,7 @@ function showMessage(message) {
   const statusElement =
     document.getElementById("status") || createStatusElement();
   statusElement.textContent = message;
-  statusElement.className = "bg-green-500 text-white p-2 rounded mt-4";
   setTimeout(() => {
     statusElement.textContent = "";
-    statusElement.className = "";
   }, 3000);
-}
-
-function createStatusElement() {
-  const statusElement = document.createElement("div");
-  statusElement.id = "status";
-  document.body.appendChild(statusElement);
-  return statusElement;
 }

@@ -2,8 +2,13 @@
   "manifest_version": 3,
   "name": "AI 酸民護盾",
   "version": "1.0",
-  "description": "「AI 酸民護盾」瀏覽器外掛：模擬網路酸民批評你的網頁內容。發文後先按一下，看看酸民可能會怎麼批評，之後真的有人來批評，你就完全沒有感覺了",
+  "description": "模擬網路酸民發文專用，鍛鍊提高自我心智抗壓能力，預防網路酸民攻擊，請勿用在惡意攻擊他人。注意需自己註冊 OpenAI 取得自己的 Secret Key 唷！",
   "permissions": ["activeTab", "storage"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",

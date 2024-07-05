@@ -3,86 +3,204 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>酸民盾牌擴充功能設定</title>
+    <title>AI 酸民護盾擴充功能設定</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="bg-slate-800 text-slate-200">
-    <div class="mx-auto max-w-md space-y-4 py-10">
-      <h1 class="text-lg font-semibold">酸民盾牌擴充功能設定</h1>
-      <div class="flex flex-col gap-2">
-        <label for="apiKey">OpenAI API Key</label>
-        <ul class="list-inside list-decimal text-sm text-slate-500">
-          <li>
-            登入 OpenAI 前往
-            <a
-              href="https://platform.openai.com/account/api-keys"
-              class="text-blue-500"
-              target="_blank"
-              >API key 頁面</a
+  <body
+    class="flex h-screen min-h-[700px] flex-col font-sans text-base font-normal text-black md:flex-row"
+  >
+    <div
+      class="flex flex-1 basis-1/2 flex-col items-center 2xl:items-end justify-center bg-slate-100 p-10 2xl:p-20"
+    >
+      <div class="w-full max-w-xl text-center md:text-left">
+        <h1
+          class="text-3xl font-semibold flex gap-2 justify-center md:justify-start items-center"
+        >
+          AI 酸民護盾<img
+            src="icons/icon48.png"
+            class="w-[26px] h-[26px] relative top-[1px]"
+          />
+        </h1>
+        <p class="text-lg mt-4">
+          模擬網路酸民發文專用，鍛鍊提高自我心智抗壓能力，預防網路酸民攻擊，請勿用在惡意攻擊他人。
+        </p>
+        <div class="mt-4 text-sm text-slate-500">
+          開源專案
+          <a
+            class="text-blue-500"
+            href="https://github.com/maylogger/troll-shield"
+            target="_blank"
+            >GitHub</a
+          >
+        </div>
+        <div>
+          <div
+            class="mt-4 md:mt-10 md:pt-10 flex flex-col md:flex-row md:items-center items-center gap-2 border-t border-t-slate-300 pt-4"
+          >
+            <div class="flex-none">
+              <img
+                src="images/maylogger.jpg"
+                class="block w-12 h-12 rounded-full object-cover"
+              />
+            </div>
+            <div>
+              <div class="text-sm text-slate-500 leading-none">作者</div>
+              <h1
+                class="text-lg text-slate-800 font-semibold leading-none mt-1"
+              >
+                勞哥 maylogger
+              </h1>
+            </div>
+          </div>
+          <div>
+            <p class="mt-2 text-sm text-slate-500">
+              我是熱愛網頁設計的勞哥 Vtuber，如果您對這類創作感興趣，我常常會在
+              YouTube 或社群上發表相關內容。請多多指教！
+            </p>
+            <ul
+              class="[&_a]:text-blue-500 flex flex-wrap gap-4 mt-2 text-sm items-center justify-center md:justify-start"
             >
-          </li>
-          <li>按下 Create new secret key 按鈕</li>
-          <li>把產生的 key 填在下面：</li>
-        </ul>
-        <input
-          class="bg-slate rounded p-2 text-black"
-          type="text"
-          id="apiKey"
-          placeholder="sk-****"
-        />
-      </div>
-      <div class="flex flex-col gap-2">
-        <label>Prompt:</label>
-        <div>
-          <input
-            type="radio"
-            id="defaultPrompt"
-            name="promptType"
-            value="default"
-            checked
-          />
-          <label for="defaultPrompt">AI 酸民護盾</label>
+              <li>
+                <a href="https://youtube.com/@maylogger" target="_blank"
+                  >YouTube</a
+                >
+              </li>
+              <li>
+                <a href="https://facebook.com/maylogger.vtuber" target="_blank"
+                  >Facebook</a
+                >
+              </li>
+              <li>
+                <a href="https://threads.net/@maylogger.vtuber" target="_blank"
+                  >Threads</a
+                >
+              </li>
+              <li>
+                <a href="https://x.com/may_logger/" target="_blank"
+                  >X(Twitter)</a
+                >
+              </li>
+              <li>
+                <a href="https://discord.com/invite/e5ck7ZF" target="_blank"
+                  >Discord</a
+                >
+              </li>
+              <li>
+                <a href="https://bento.me/maylogger" target="_blank">Bento</a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <input
-            type="radio"
-            id="customPrompt"
-            name="promptType"
-            value="custom"
-          />
-          <label for="customPrompt">自訂</label>
-        </div>
-        <textarea
-          rows="7"
-          class="bg-slate rounded p-2 text-black hidden"
-          id="prompt"
-          placeholder="輸入你的自訂 prompt"
-        ></textarea>
-      </div>
-      <div class="flex flex-col gap-1">
-        <label for="model">Model:</label>
-        <select class="bg-slate rounded p-2 text-black" type="text" id="model">
-          <option selected value="gpt-3.5-turbo-0125">
-            便宜快速：gpt-3.5-turbo-0125
-          </option>
-          <option value="gpt-4o-2024-05-13">精準明確：gpt-4o-2024-05-13</option>
-        </select>
-      </div>
-      <div class="flex gap-4 !mt-8">
-        <button
-          class="flex-grow rounded bg-blue-500 px-4 py-2 text-white hover:opacity-80"
-          id="save"
-        >
-          Save
-        </button>
-        <button
-          class="flex-grow rounded border border-slate-500 px-4 py-2 text-white hover:opacity-80"
-          id="reset"
-        >
-          Reset
-        </button>
       </div>
     </div>
+    <div
+      class="flex flex-1 basis-1/2 flex-col items-center 2xl:items-start justify-center p-10 2xl:p-20"
+    >
+      <div class="flex w-full max-w-xl flex-col gap-6">
+        <h2 class="text-2xl font-semibold">設定</h2>
+        <div class="flex flex-col gap-2">
+          <label for="apiKey" class="font-semibold">OpenAI API Key</label>
+          <ul class="list-inside list-decimal text-sm text-gray-500">
+            <li>
+              登入 OpenAI 前往
+              <a
+                href="https://platform.openai.com/api-keys"
+                class="text-blue-500"
+                target="_blank"
+                >API key 頁面</a
+              >
+            </li>
+            <li>按下 Create new secret key 按鈕</li>
+            <li>把產生的 key 填在下面：</li>
+          </ul>
+          <input
+            class="rounded border-2 border-stone-600 p-2 text-black focus-visible:border-stone-600 focus-visible:bg-yellow-50 focus-visible:outline-none"
+            type="password"
+            id="apiKey"
+            placeholder="sk-****"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-semibold">指令 Prompt</label>
+          <div class="flex items-baseline gap-2">
+            <input
+              type="radio"
+              id="defaultPrompt"
+              name="promptType"
+              value="default"
+              class="accent-blue-500"
+              checked
+            />
+            <label for="defaultPrompt">AI 酸民護盾</label>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <input
+              type="radio"
+              id="customPrompt"
+              name="promptType"
+              value="custom"
+              class="accent-blue-500"
+            />
+            <label for="customPrompt">自訂</label>
+          </div>
+          <div id="customArea" class="hidden pl-5">
+            <textarea
+              rows="3"
+              class="rounded w-full border-2 border-stone-600 p-2 text-black focus-visible:border-stone-600 focus-visible:bg-yellow-50 focus-visible:outline-none"
+              id="prompt"
+              placeholder="輸入你的自訂 prompt，例：你是結論專家，幫我總結為成3個重點"
+            ></textarea>
+            <!-- input number for customTemperature -->
+            <div class="flex flex-col gap-1">
+              <label for="customTemperature"
+                >自訂溫度 Temperature（越高越有創意，越低越穩定）</label
+              >
+              <input
+                type="number"
+                id="customTemperature"
+                class="w-fit rounded border-2 border-stone-600 p-2 text-black focus-visible:border-stone-600 focus-visible:bg-yellow-50 focus-visible:outline-none"
+                value="0.3"
+                step="0.1"
+                min="0"
+                max="1"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-semibold" for="model">語言模型 Model</label>
+          <select
+            class="rounded border-2 border-stone-600 p-2 text-black focus-visible:border-stone-600 focus-visible:bg-yellow-50 focus-visible:outline-none"
+            type="text"
+            id="model"
+          >
+            <option selected value="gpt-3.5-turbo">
+              便宜快速：gpt-3.5-turbo
+            </option>
+            <option value="gpt-4o">精準明確：gpt-4o</option>
+          </select>
+        </div>
+        <div class="flex gap-4 pt-4">
+          <button
+            class="flex-1 flex-grow rounded bg-blue-500 px-4 py-2 text-white hover:opacity-80"
+            id="save"
+          >
+            儲存
+          </button>
+          <button
+            class="flex-1 flex-grow rounded bg-stone-200 px-4 py-2 hover:opacity-80"
+            id="reset"
+          >
+            重置預設
+          </button>
+        </div>
+        <div
+          id="status"
+          class="text-center font-semibold text-green-500 h-0"
+        ></div>
+      </div>
+    </div>
+
     <script src="options.js"></script>
   </body>
 </html>
