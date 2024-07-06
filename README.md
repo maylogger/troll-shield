@@ -15,12 +15,13 @@
 
 ### 安裝釋出版本
 
-上架 Chrome 線上應用程式商店中，成功後會更新連結在此
+- 上架 Chrome 線上應用程式商店中，成功後會更新連結在此
+- 開發測試版可以到[這裡下載](https://github.com/maylogger/troll-shield/releases)，開啟 Chrome Extension 開發模式，讀取解壓縮後的目錄。
 
 ### 安裝開發版本
 
-- 下載這個 repository
-- Chrome Extension 開啟開發模式讀取 `troll-shield-extension` 目錄即可
+- 下載這整個 repository
+- 開啟 Chrome Extension 開發模式，讀取 `troll-shield-extension` 目錄即可
 
 ## ⚠️ 安裝後必須的設定
 
