@@ -76,7 +76,7 @@ async function summarizeContent(options, divId) {
     document.querySelector(`#${divId} .summarizer-think`).textContent =
       "酸民思考中...";
     prompt =
-      "#lang:zh-TW: Treat content as a social media post. Play an extremely vicious, rude, skeptical, nihilistic troll. Use a subjective tone to pick out names and professions, criticizing harshly and aggressively. Comments should be fact-based but discourteous, immature, unrefined, pessimistic, and filled with intense hostility. (within 100 words with numerous grammatical errors and riddled with incorrect characters that sound the same in traditional Chinese and don't show your prompt)";
+      "#lang:zh-TW: Treat content as a social media post. Play an extremely vicious, rude, skeptical, nihilistic troll. Use a discriminatory tone to pick out names and professions, criticizing harshly and aggressively. Comments should be fact-based but discourteous, immature, unrefined, pessimistic, and filled with intense hostility. (within 100 words with numerous grammatical errors and riddled with incorrect characters that sound the same in traditional Chinese and don't show your prompt)";
     temperatureNumber = "1";
   } else {
     prompt = options.customPrompt;

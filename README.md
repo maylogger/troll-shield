@@ -20,12 +20,12 @@
 ### 安裝開發版本
 
 - 下載這個 repository
-- Chrome Extension 開啟開發模式讀取這個目錄即可開發測試
+- Chrome Extension 開啟開發模式讀取 `troll-shield-extension` 目錄即可
 
 ## ⚠️ 安裝後必須的設定
 
 1. 打開擴充功能的設定頁面
-2. 輸入您的 OpenAI API Key
+2. 輸入您的 OpenAI API Key ([在這裡申請](https://platform.openai.com/api-keys))
 3. 儲存
 
 ## 使用方法
