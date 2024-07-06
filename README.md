@@ -36,6 +36,10 @@
 
 歡迎發 issue 和 PR
 
+## 隱私權政策
+
+[AI 酸民護盾 Privacy Policy 隱私權政策](https://maylogger.github.io/troll-shield/privacy.html)
+
 ## 授權
 
 MIT
