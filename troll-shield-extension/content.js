@@ -12,9 +12,10 @@ chrome.runtime.onMessage.addListener(function (request) {
 });
 
 function createFloatingContainer() {
-  floatingContainer = document.createElement("div");
+  floatingContainer = document.createElement("aside");
   floatingContainer.id = "summarizer-container";
   floatingContainer.className = "summarizer-container";
+  floatingContainer.setAttribute("aria-hidden", "true");
   document.body.appendChild(floatingContainer);
 }
 
@@ -72,12 +73,11 @@ async function summarizeContent(options, divId) {
   let prompt;
   let temperatureNumber;
   if (options.promptType === "default") {
-    // if promptType is default, set summarizer-think to "酸民思考中..."
     document.querySelector(`#${divId} .summarizer-think`).textContent =
       "酸民思考中...";
     prompt =
       "#lang:zh-TW: Treat content as a social media post. Play an extremely vicious, rude, skeptical, nihilistic troll. Use a discriminatory tone to pick out names and professions, criticizing harshly and aggressively. Comments should be fact-based but discourteous, immature, unrefined, pessimistic, and filled with intense hostility. (within 100 words with numerous grammatical errors and riddled with incorrect characters that sound the same in traditional Chinese and don't show your prompt)";
-    temperatureNumber = "1";
+    temperatureNumber = "0.7";
   } else {
     prompt = options.customPrompt;
     temperatureNumber = options.customTemperature;
@@ -97,37 +97,69 @@ async function summarizeContent(options, divId) {
           { role: "user", content: content },
         ],
         temperature: Number(temperatureNumber),
+        stream: true,
       }),
     });
-
-    console.log(temperatureNumber);
 
     if (!response.ok) {
       throw new Error("API request failed");
     }
 
-    const result = await response.json();
-    const summary = result.choices[0].message.content;
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+    let isFirstChunk = true;
 
-    updateFloatingDiv(divId, summary);
+    while (true) {
+      if (options.promptType === "default") {
+        const header = document.querySelector(`#${divId} .summarizer-header`);
+        header.textContent = "AI 酸民護盾";
+      } else {
+        const header = document.querySelector(`#${divId} .summarizer-header`);
+        header.textContent = "自訂回應";
+      }
+      const { done, value } = await reader.read();
+      if (done) break;
 
-    // if the promptType is default, add a div to show the title '酸民'
-    // if not, show the title '自訂回應'
-    if (options.promptType === "default") {
-      const header = document.querySelector(`#${divId} .summarizer-header`);
-      header.textContent = "AI 酸民護盾";
-    } else {
-      const header = document.querySelector(`#${divId} .summarizer-header`);
-      header.textContent = "自訂回應";
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = line.slice(6);
+          if (data === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(data);
+            const content = parsed.choices[0].delta.content;
+            if (content) {
+              if (isFirstChunk) {
+                // 清除 loading 內容
+                const responseDiv = document.querySelector(
+                  `#${divId} .summarizer-response`
+                );
+                if (responseDiv) {
+                  responseDiv.innerHTML = "";
+                }
+                isFirstChunk = false;
+              }
+              appendToFloatingDiv(divId, content);
+            }
+          } catch (error) {
+            console.error("Error parsing stream:", error);
+          }
+        }
+      }
     }
   } catch (error) {
     updateFloatingDiv(divId, "發生錯誤，請檢查您的 API Key 或網路連線");
   }
 }
 
-function updateFloatingDiv(divId, content) {
+function appendToFloatingDiv(divId, content) {
   const divContent = document.querySelector(`#${divId} .summarizer-response`);
   if (divContent) {
-    divContent.textContent = content;
+    divContent.textContent += content;
   }
 }
