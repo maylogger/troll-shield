@@ -106,7 +106,7 @@ async function summarizeContent(options, divId) {
       switch (response.status) {
         case 401:
           errorMessage =
-            '請確定 API key 是否正確<br><a href="https://platform.openai.com/api-keys" target="_blank">前往查看</a>';
+            "請確定 API key 是否正確<br><a href='https://platform.openai.com/api-keys' target='_blank'>前往查看</a>";
           break;
         case 403:
           errorMessage =
