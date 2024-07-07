@@ -57,7 +57,7 @@ async function checkApiKeyAndSummarize() {
   ]);
   const divId = `summarizer-extension-${divCounter}`;
 
-  if (!options.apiKey) {
+  if (options.apiKey == null || options.apiKey === "") {
     updateFloatingDiv(divId, "請先到設定輸入 API Key");
     return;
   }
@@ -91,7 +91,7 @@ async function summarizeContent(options, divId) {
         Authorization: `Bearer ${options.apiKey}`,
       },
       body: JSON.stringify({
-        model: options.model,
+        model: "gpt-3.5-turbo-instruct",
         messages: [
           { role: "system", content: prompt },
           { role: "user", content: content },
@@ -102,7 +102,31 @@ async function summarizeContent(options, divId) {
     });
 
     if (!response.ok) {
-      throw new Error("API request failed");
+      let errorMessage;
+      switch (response.status) {
+        case 401:
+          errorMessage =
+            '請確定 API key 是否正確<br><a href="https://platform.openai.com/api-keys" target="_blank">前往查看</a>';
+          break;
+        case 403:
+          errorMessage =
+            "您所在的區域或國家不支援此功能<br><a href='https://platform.openai.com/docs/supported-countries' target='_blank'>支援地區</a>";
+          break;
+        case 429:
+          errorMessage =
+            "您的請求超出了最低額度，請至少存 US$5 到 OpenAI 後台<br><a href='https://platform.openai.com/account/billing' target='_blank'>前往儲值</a> 或 <a href='https://platform.openai.com/account/limits' target='_blank'>調整使用額度上限</a>";
+          break;
+        case 500:
+          errorMessage =
+            "伺服器錯誤，請查看 Open AI 是否正常運作<br><a href='https://status.openai.com/' target='_blank'>前往查看</a>";
+          break;
+        case 503:
+          errorMessage = "目前太多人使用此功能，請稍後再試試";
+          break;
+        default:
+          errorMessage = `API 請求失敗 ${response.status}`;
+      }
+      throw new Error(errorMessage);
     }
 
     const reader = response.body.getReader();
@@ -153,7 +177,7 @@ async function summarizeContent(options, divId) {
       }
     }
   } catch (error) {
-    updateFloatingDiv(divId, "發生錯誤，請檢查您的 API Key 或網路連線");
+    updateFloatingDiv(divId, error.message);
   }
 }
 
@@ -161,5 +185,12 @@ function appendToFloatingDiv(divId, content) {
   const divContent = document.querySelector(`#${divId} .summarizer-response`);
   if (divContent) {
     divContent.textContent += content;
+  }
+}
+
+function updateFloatingDiv(divId, message) {
+  const divContent = document.querySelector(`#${divId} .summarizer-response`);
+  if (divContent) {
+    divContent.innerHTML = message;
   }
 }

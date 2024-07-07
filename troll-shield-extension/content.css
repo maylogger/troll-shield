@@ -15,6 +15,11 @@
   box-sizing: border-box;
 }
 
+.summarizer-container a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
 .summarizer-container * {
   font-family: ui-sans-serif, system-ui, sans-serif, Apple Color Emoji,
     Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;

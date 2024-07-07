@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI 酸民護盾",
-  "version": "1.1",
+  "version": "1.11",
   "description": "模擬網路酸民發文專用，鍛鍊提高自我心智抗壓能力，預防網路酸民攻擊，請勿用在惡意攻擊他人。注意需自己註冊 OpenAI 取得自己的 Secret Key 唷！",
   "permissions": ["activeTab", "storage"],
   "icons": {
