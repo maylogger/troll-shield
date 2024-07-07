@@ -91,7 +91,7 @@ async function summarizeContent(options, divId) {
         Authorization: `Bearer ${options.apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo-instruct",
+        model: options.model,
         messages: [
           { role: "system", content: prompt },
           { role: "user", content: content },
