@@ -100,18 +100,30 @@
         <h2 class="text-2xl font-semibold">設定</h2>
         <div class="flex flex-col gap-2">
           <label for="apiKey" class="font-semibold">OpenAI API Key</label>
-          <ul class="list-inside list-decimal text-sm text-gray-500">
+          <ul
+            class="list-inside list-decimal text-sm text-gray-500 [&_a]:text-sky-500"
+          >
             <li>
-              登入 OpenAI 前往
+              註冊 OpenAI，請至少確定有 US$5 額度
               <a
-                href="https://platform.openai.com/api-keys"
-                class="text-blue-500"
+                href="https://platform.openai.com/account/billing"
                 target="_blank"
-                >API key 頁面</a
+                >前往儲值</a
+              >
+              或
+              <a
+                href="https://platform.openai.com/account/limits"
+                target="_blank"
+                >調整使用額度上限</a
               >
             </li>
-            <li>按下 Create new secret key 按鈕</li>
-            <li>把產生的 key 填在下面：</li>
+
+            <li>
+              前往
+              <a href="https://platform.openai.com/api-keys" target="_blank"
+                >API key 頁面</a
+              >，產生一把 key 填在下面：
+            </li>
           </ul>
           <input
             class="rounded border-2 border-stone-600 p-2 text-black focus-visible:border-stone-600 focus-visible:bg-yellow-50 focus-visible:outline-none"

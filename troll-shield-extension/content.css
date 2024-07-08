@@ -124,3 +124,26 @@
 .opacity-75 {
   opacity: 0.75;
 }
+
+.consulting-div {
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: pre-wrap;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.consulting-div .sent {
+  font-size: 14px;
+  color: #0ea5e9;
+}
+
+.consulting-div .sent:hover {
+  color: #38bdf8;
+}
+
+.consulting-div.done {
+  cursor: auto;
+}

@@ -58,11 +58,38 @@ async function checkApiKeyAndSummarize() {
   const divId = `summarizer-extension-${divCounter}`;
 
   if (options.apiKey == null || options.apiKey === "") {
-    updateFloatingDiv(divId, "請先到設定輸入 API Key");
+    updateFloatingDiv(divId, "請先到擴充功能的設定選項中輸入 API Key");
     return;
   }
 
   summarizeContent(options, divId);
+}
+
+async function fetchOpenAICompletion(
+  apiKey,
+  model,
+  prompt,
+  content,
+  temperature
+) {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: "system", content: prompt },
+        { role: "user", content: content },
+      ],
+      temperature: Number(temperature),
+      stream: true,
+    }),
+  });
+
+  return response;
 }
 
 async function summarizeContent(options, divId) {
@@ -84,22 +111,13 @@ async function summarizeContent(options, divId) {
   }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${options.apiKey}`,
-      },
-      body: JSON.stringify({
-        model: options.model,
-        messages: [
-          { role: "system", content: prompt },
-          { role: "user", content: content },
-        ],
-        temperature: Number(temperatureNumber),
-        stream: true,
-      }),
-    });
+    const response = await fetchOpenAICompletion(
+      options.apiKey,
+      options.model,
+      prompt,
+      content,
+      temperatureNumber
+    );
 
     if (!response.ok) {
       let errorMessage;
@@ -175,6 +193,78 @@ async function summarizeContent(options, divId) {
           }
         }
       }
+    }
+    if (options.promptType === "default") {
+      // create a consulting div in the #${divId}
+      // add a click event listener
+      const consultingDiv = document.createElement("div");
+      consultingDiv.className = "consulting-div";
+      consultingDiv.innerHTML = "<span class='sent'>分析與建議</span>";
+      document.querySelector(`#${divId}`).appendChild(consultingDiv);
+      // if use click #${divId} .consulting-div
+      // send .summarizer-response content to openai get the consulting response
+      // ignore all the error case
+      // clear consulting-div and append the consulting response
+      consultingDiv.addEventListener("click", async () => {
+        // Prevent multiple clicks
+        if (consultingDiv.classList.contains("done")) {
+          return;
+        }
+
+        consultingDiv.textContent = "分析中...";
+        consultingDiv.style.pointerEvents = "none";
+
+        const consultingResponse = await fetchOpenAICompletion(
+          options.apiKey,
+          options.model,
+          "以下是網友給我的留言，你扮演法律專家協助分析此留言，並給我幾個建議該如何回應，使用繁體中文。格式：\n\n法律問題分析：\n\n1. 第一點\n2. 第二點\n3. ... \n\n建議回應方式：\n\n「...」\n\n「...」",
+          document.querySelector(`#${divId} .summarizer-response`).textContent,
+          "0.3"
+        );
+
+        if (consultingResponse.ok) {
+          const consultingReader = consultingResponse.body.getReader();
+          const consultingDecoder = new TextDecoder("utf-8");
+          let consultingBuffer = "";
+          let consultingIsFirstChunk = true;
+
+          while (true) {
+            const { done, value } = await consultingReader.read();
+            if (done) break;
+
+            consultingBuffer += consultingDecoder.decode(value, {
+              stream: true,
+            });
+            const consultingLines = consultingBuffer.split("\n");
+            consultingBuffer = consultingLines.pop();
+
+            for (const line of consultingLines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6);
+                if (data === "[DONE]") break;
+
+                try {
+                  const parsed = JSON.parse(data);
+                  const content = parsed.choices[0].delta.content;
+                  if (content) {
+                    if (consultingIsFirstChunk) {
+                      consultingDiv.innerHTML = "";
+                      consultingIsFirstChunk = false;
+                    }
+                    consultingDiv.innerHTML += content;
+                  }
+                } catch (error) {
+                  console.error("Error parsing stream:", error);
+                }
+              }
+            }
+          }
+        }
+
+        // Add .done class and update text after completion
+        consultingDiv.classList.add("done");
+        consultingDiv.style.pointerEvents = "auto";
+      });
     }
   } catch (error) {
     updateFloatingDiv(divId, error.message);
