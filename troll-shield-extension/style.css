@@ -1367,6 +1367,14 @@ video {
   margin-top: 1rem;
 }
 
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
 .block {
   display: block;
 }
@@ -1395,6 +1403,14 @@ video {
   height: 100vh;
 }
 
+.h-4 {
+  height: 1rem;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
 .min-h-\[700px\] {
   min-height: 700px;
 }
@@ -1414,6 +1430,14 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-4 {
+  width: 1rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .max-w-xl {
@@ -1480,6 +1504,10 @@ video {
   gap: 1rem;
 }
 
+.gap-5 {
+  gap: 1.25rem;
+}
+
 .gap-6 {
   gap: 1.5rem;
 }
@@ -1488,8 +1516,16 @@ video {
   row-gap: 0.5rem;
 }
 
-.text-balance {
-  text-wrap: balance;
+.divide-x > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-x-reverse: 0;
+  border-right-width: calc(1px * var(--tw-divide-x-reverse));
+  border-left-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
+}
+
+.divide-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-x-reverse: 0;
+  border-right-width: calc(2px * var(--tw-divide-x-reverse));
+  border-left-width: calc(2px * calc(1 - var(--tw-divide-x-reverse)));
 }
 
 .rounded {
@@ -1562,6 +1598,10 @@ video {
 
 .pt-4 {
   padding-top: 1rem;
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
 }
 
 .text-center {
@@ -1897,6 +1937,11 @@ video {
   }
 }
 
+.hover\:text-blue-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
 .hover\:opacity-80:hover {
   opacity: 0.8;
 }
@@ -1938,10 +1983,6 @@ video {
     justify-content: flex-start;
   }
 
-  .md\:text-wrap {
-    text-wrap: wrap;
-  }
-
   .md\:p-20 {
     padding: 5rem;
   }
@@ -1972,6 +2013,10 @@ video {
   .\32xl\:p-20 {
     padding: 5rem;
   }
+}
+
+.\[\&\>li\]\:pl-2>li {
+  padding-left: 0.5rem;
 }
 
 .\[\&_a\]\:text-blue-500 a {
