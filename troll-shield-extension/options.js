@@ -2,7 +2,7 @@ const defaultOptions = {
   apiKey: "",
   promptType: "default",
   customPrompt: "",
-  model: "gpt-3.5-turbo",
+  model: "gpt-4o-mini",
   customTemperature: "0.3",
 };
 
